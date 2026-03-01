@@ -157,6 +157,7 @@
     .breaking .ticker{
       padding:10px 12px;font-size:14px;font-weight:900;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      display:block;
     }
 
     /* CAPA */
@@ -237,7 +238,6 @@
 
     /* Sidebar - últimas por editoria */
     .sideLatest{padding:14px;}
-    .sideLatest h4{margin:0 0 10px;font-size:18px;font-weight:1000;}
     .sideLatest .mini{margin:0 0 12px;color:var(--muted);font-weight:800;font-size:12px;line-height:1.35}
     .sideLatest .group{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;}
     .sideLatest .group:first-of-type{border-top:none;padding-top:0;margin-top:0;}
@@ -686,7 +686,7 @@
       function isGoodTitle(text){
         const t = normalizeText(text);
         if(!t) return false;
-        if(t.length < 18) return false;
+        if(t.length < 12) return false;
         if(/^ver mais$/i.test(t)) return false;
         if(/^carregando/i.test(t)) return false;
         return true;
@@ -707,24 +707,21 @@
           const sec = document.getElementById(s.id);
           if(!sec) continue;
 
-          // pega links que pareçam matérias (prioriza newsCard, mas cai para qualquer <a>)
           let links = $all("a.newsCard", sec);
           if(!links.length) links = $all("a", sec);
 
           const picked = [];
           for(const a of links){
-            if(picked.length >= 6) break;
+            if(picked.length >= 8) break;
 
             const titleEl = $(".newsTitle", a) || $("h4", a) || $("h3", a);
             const title = normalizeText(titleEl ? titleEl.textContent : a.textContent);
-
             if(!isGoodTitle(title)) continue;
 
             const href = a.getAttribute("href") || "#";
             const obj = { catId: s.id, catName: s.name, title, href };
-            picked.push(obj);
 
-            // para o breaking (mistura)
+            picked.push(obj);
             items.push(obj);
           }
 
@@ -765,7 +762,6 @@
 
         const cleaned = (items || []).filter(x => isGoodTitle(x.title));
         if(!cleaned.length){
-          // fallback: tira loading, mas avisa
           breakingCat.textContent = "GIRO MT";
           breakingTitle.textContent = "Sem títulos para exibir.";
           breakingLink.href = "#";
@@ -786,12 +782,9 @@
         if(btnNext) btnNext.addEventListener("click", next);
 
         render();
-
-        // autoplay
         setInterval(next, 6000);
       }
 
-      // Carrossel por seção: pagina os cards em blocos de 3
       function setupSectionCarousels(){
         const sections = $all("section.section");
         for(const sec of sections){
@@ -803,15 +796,12 @@
           const perPage = 3;
           const totalPages = Math.ceil(cards.length / perPage);
 
-          // se só tem 1 página, esconde as bolinhas (evita “sumir”/estranhar)
           if(totalPages <= 1){
             dotsWrap.setAttribute("hidden", "true");
-            // garante visível
             cards.forEach(c => c.style.display = "");
             continue;
           }
 
-          // cria dots
           dotsWrap.removeAttribute("hidden");
           dotsWrap.innerHTML = "";
           const dots = [];
@@ -851,7 +841,6 @@
         setupSectionCarousels();
       }
 
-      // garante que roda após o DOM
       if(document.readyState === "loading"){
         document.addEventListener("DOMContentLoaded", init);
       } else {
