@@ -1,852 +1,1410 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GIRO MT — Esqueleto</title>
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GIRO MT — Portal (Protótipo)</title>
+    <style>
+      :root {
+        --bg: #0b0f14;
+        --panel: #0f1620;
+        --panel2: #111b28;
+        --text: #e8eef6;
+        --muted: #aab7c6;
+        --brand: #f59e0b; /* laranja editorial */
+        --line: rgba(255, 255, 255, 0.08);
+        --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        --radius: 14px;
+        --max: 1180px;
 
-  <style>
-    :root{
-      --bg:#f2f2f2;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --line:#e5e7eb;
+        /* Alturas controladas para banners */
+        --ad-h: 120px;
+        --ad-h-mobile: 86px;
+      }
 
-      --top:#2b333a;
-      --teal:#63b7ad;
-      --shadow:0 10px 30px rgba(0,0,0,.08);
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        background: radial-gradient(
+            1200px 700px at 30% -10%,
+            rgba(245, 158, 11, 0.18),
+            transparent 55%
+          ),
+          radial-gradient(
+            1000px 500px at 85% 0%,
+            rgba(59, 130, 246, 0.12),
+            transparent 50%
+          ),
+          var(--bg);
+        color: var(--text);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
 
-      --container:1180px;
-      --sidebar:330px;
-      --gap:14px;
+      .container {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 14px;
+      }
 
-      --radius:14px;
+      /* TOPBAR */
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: rgba(10, 14, 19, 0.65);
+        backdrop-filter: blur(10px);
+      }
+      .topbar-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .topbar-left {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--muted);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--brand);
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+      }
+      .rates {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .rate b {
+        color: var(--text);
+        font-weight: 600;
+      }
 
-      --c-pol:#1b7f6f;
-      --c-esp:#2f7a2f;
-      --c-sau:#c93a2f;
-      --c-eco:#2b5bd7;
-    }
+      /* HEADER + NAV */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(11, 15, 20, 0.72);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+      }
+      .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 12px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.95),
+          rgba(245, 158, 11, 0.25)
+        );
+        box-shadow: 0 10px 25px rgba(245, 158, 11, 0.18);
+        position: relative;
+      }
+      .logo:after {
+        content: "";
+        position: absolute;
+        inset: 9px;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: 0.3px;
+        line-height: 1.1;
+      }
+      .brand small {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 2px;
+      }
+      .search {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      .search input {
+        width: min(540px, 100%);
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        outline: none;
+      }
+      .search input::placeholder {
+        color: rgba(170, 183, 198, 0.75);
+      }
+      .head-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .btn {
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .btn.primary {
+        background: rgba(245, 158, 11, 0.14);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: Arial, Helvetica, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-    }
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-    .container{max-width:var(--container);margin:0 auto;padding:0 14px;}
+      .nav {
+        border-top: 1px solid var(--line);
+        overflow: auto;
+      }
+      .nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 10px 0;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .nav a {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 999px;
+        color: var(--muted);
+        border: 1px solid transparent;
+      }
+      .nav a:hover {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .tag {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        color: rgba(245, 158, 11, 0.95);
+        background: rgba(245, 158, 11, 0.08);
+      }
 
-    /* TOPBAR */
-    .topbar{background:var(--top);color:#fff;position:sticky;top:0;z-index:50;}
-    .toprow{
-      display:grid;
-      grid-template-columns: 1fr 520px 1fr;
-      gap:14px;
-      align-items:center;
-      padding:10px 0;
-    }
-    @media(max-width:980px){ .toprow{grid-template-columns:1fr;gap:8px} }
-    .brand{display:flex;align-items:center;gap:10px;font-weight:1000;letter-spacing:.4px;}
-    .logo{
-      width:42px;height:28px;border-radius:10px;
-      background: linear-gradient(135deg, #1aa79b, #0b5a66);
-      box-shadow:0 8px 18px rgba(0,0,0,.18);
-      position:relative;
-    }
-    .logo:after{
-      content:"GIRO";
-      position:absolute;inset:0;
-      display:flex;align-items:center;justify-content:center;
-      font-size:12px;font-weight:1000;color:#fff;
-      letter-spacing:.6px;
-    }
-    .search{display:flex;align-items:center;gap:10px;}
-    .search input{
-      width:100%;
-      background:transparent;
-      border:none;
-      border-bottom:1px solid rgba(255,255,255,.35);
-      color:#fff;
-      padding:10px 6px;
-      outline:none;
-      font-size:14px;
-      font-weight:700;
-    }
-    .search .lens{
-      width:34px;height:34px;border-radius:10px;
-      display:flex;align-items:center;justify-content:center;
-      border:1px solid rgba(255,255,255,.2);
-      background:rgba(255,255,255,.06);
-      font-weight:1000;
-    }
-    .market{
-      display:flex;gap:18px;justify-content:flex-end;align-items:center;
-      font-size:14px;font-weight:900;white-space:nowrap;
-      opacity:.95;
-    }
-    .market b{color:#f59e0b}
+      /* ADS (BANNER TOPO / MEIO) — CORREÇÃO PRINCIPAL
+         - Banner NÃO deve ser "cover" (corta logo/texto)
+         - Deve ser "contain" (mostra inteiro), com altura fixa controlada
+      */
+      .ad-slot {
+        margin: 14px 0;
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        background: rgba(255, 255, 255, 0.02);
+        display: block;
+      }
+      .ad-media {
+        width: 100%;
+        height: var(--ad-h);
+        background: rgba(11, 18, 32, 0.85); /* “fundo de mídia” para PNG/GIF */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ad-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* não estica; não corta */
+        object-position: center;
+        display: block;
+      }
+      @media (max-width: 720px) {
+        .ad-media {
+          height: var(--ad-h-mobile);
+        }
+        .search {
+          display: none;
+        }
+      }
 
-    /* NAV */
-    .navwrap{background:#fff;border-bottom:1px solid var(--line);}
-    .nav{
-      display:flex;flex-wrap:wrap;gap:6px;
-      list-style:none;margin:0;padding:0;
-      font-weight:1000;font-size:13px;text-transform:uppercase;
-    }
-    .nav a{display:block;padding:11px 12px;border-radius:10px;}
-    .nav a:hover{background:#f3f4f6}
+      /* “ÚLTIMA HORA” */
+      .breaking {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.03);
+        margin: 14px 0;
+      }
+      .breaking .label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.3px;
+      }
+      .breaking .label span {
+        background: rgba(245, 158, 11, 0.14);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        padding: 6px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ticker {
+        overflow: hidden;
+        position: relative;
+      }
+      .ticker-track {
+        display: flex;
+        gap: 26px;
+        white-space: nowrap;
+        will-change: transform;
+      }
+      .ticker a {
+        color: var(--muted);
+      }
+      .ticker a b {
+        color: var(--text);
+      }
+      .ticker a:hover {
+        color: var(--text);
+      }
 
-    /* PAGE */
-    main{padding:14px 0 26px;}
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr var(--sidebar);
-      gap:var(--gap);
-      align-items:start;
-    }
-    @media (max-width:980px){ .grid{grid-template-columns:1fr} }
+      /* LAYOUT PRINCIPAL */
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 16px;
+        align-items: start;
+      }
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
+      /* CAPA */
+      .hero {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: 14px;
+      }
+      @media (max-width: 820px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    /* BANNER TOP */
-    .bannerTop{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;}
-    .bannerTop img{width:100%;height:auto;display:block;}
+      .card {
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.035),
+          rgba(255, 255, 255, 0.02)
+        );
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
 
-    /* BREAKING */
-    .breaking{
-      margin-top:14px;
-      background:var(--teal);
-      border-radius:10px;
-      overflow:hidden;
-      display:grid;
-      grid-template-columns: 260px 260px 1fr;
-      align-items:center;
-      min-height:46px;
-      font-weight:1000;
-      color:#0b1220;
-      border:1px solid rgba(0,0,0,.08);
-    }
-    @media (max-width:980px){
-      .breaking{grid-template-columns:1fr;gap:8px;padding:10px;}
-    }
-    .breaking .left{padding:12px 14px;text-transform:uppercase;font-size:13px;background:rgba(255,255,255,.18);}
-    .breaking .mid{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 12px;}
-    .pill{
-      background:#fff;border-radius:999px;padding:6px 12px;
-      display:flex;align-items:center;justify-content:center;
-      gap:10px;min-width:230px;border:1px solid rgba(0,0,0,.08);
-      text-transform:uppercase;font-size:13px;
-    }
-    .pill .arrow{
-      width:28px;height:28px;border-radius:999px;
-      display:flex;align-items:center;justify-content:center;
-      background:#fff;border:1px solid rgba(0,0,0,.12);
-      cursor:pointer;font-weight:1000;
-      user-select:none;
-    }
-    .breaking .ticker{
-      padding:10px 12px;font-size:14px;font-weight:900;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-      display:block;
-    }
+      .hero-main .media {
+        height: 320px;
+        position: relative;
+        overflow: hidden;
+        background: #0b1220;
+      }
+      .hero-main .media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .badge {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        background: rgba(245, 158, 11, 0.14);
+        color: rgba(245, 158, 11, 0.95);
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .hero-main .content {
+        padding: 14px 14px 16px;
+      }
+      .kicker {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .title {
+        margin: 0 0 8px;
+        font-size: 22px;
+        line-height: 1.2;
+        letter-spacing: 0.2px;
+      }
+      .excerpt {
+        margin: 0;
+        color: rgba(232, 238, 246, 0.85);
+        line-height: 1.45;
+        font-size: 14px;
+      }
+      .meta {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .meta .src {
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.02);
+      }
 
-    /* CAPA */
-    .capWrap{margin-top:14px;}
-    .capGrid{display:grid;grid-template-columns: 2.05fr 1.1fr 1fr;gap:12px;align-items:stretch;}
-    @media(max-width:980px){ .capGrid{grid-template-columns:1fr} }
-    .capStack{display:grid;gap:12px;}
-    .capItem{
-      position:relative;border-radius:14px;overflow:hidden;background:#0b1220;
-      border:1px solid rgba(0,0,0,.08);box-shadow:0 10px 22px rgba(0,0,0,.14);
-    }
-    .capItem.big{min-height:360px;}
-    .capItem.med{min-height:360px;}
-    .capItem.small{min-height:175px;}
-    .capItem img{width:100%;height:100%;object-fit:cover;opacity:.96;}
-    .capOverlay{
-      position:absolute;left:0;right:0;bottom:0;
-      padding:16px 16px 12px;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.78) 60%, rgba(0,0,0,.9) 100%);
-      color:#fff;
-    }
-    .capOverlay .meta{font-size:12px;font-weight:1000;letter-spacing:.3px;text-transform:uppercase;opacity:.95;margin-bottom:6px;}
-    .capOverlay h2{margin:0;font-size:26px;font-weight:1000;line-height:1.08;}
-    .capOverlay h3{margin:0;font-size:16px;font-weight:1000;line-height:1.14;}
-    .capOverlay p{margin:8px 0 0;font-size:12px;font-weight:800;opacity:.9;line-height:1.35;}
+      .hero-side {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .mini {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 10px;
+        align-items: stretch;
+        padding: 10px;
+      }
+      .mini .thumb {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #0b1220;
+        height: 84px;
+      }
+      .mini .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .mini h3 {
+        margin: 0 0 6px;
+        font-size: 14px;
+        line-height: 1.2;
+      }
+      .mini p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
 
-    /* SECTION PATTERN */
-    .section{margin-top:16px;}
-    .secHeader{display:flex;align-items:center;gap:14px;padding:8px 0 10px;}
-    .secHeader .name{font-size:28px;font-weight:400;letter-spacing:.2px;color: var(--secColor);}
-    .secHeader .line{height:2px;flex:1;border-radius:999px;background:var(--secColor);opacity:.9;margin-top:8px;}
-    .secHeader .more{
-      margin-left:auto;background:var(--secColor);color:#fff;border:none;border-radius:999px;
-      padding:8px 18px;font-weight:1000;text-transform:uppercase;font-size:12px;cursor:pointer;
-    }
+      /* SEÇÕES */
+      .section {
+        margin-top: 14px;
+      }
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 12px;
+        margin: 12px 0 10px;
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: 0.2px;
+      }
+      .section-head a {
+        color: var(--muted);
+        font-size: 13px;
+        border: 1px solid var(--line);
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .section-head a:hover {
+        color: var(--text);
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      @media (max-width: 720px) {
+        .cards {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    .labelRow{
-      display:grid;grid-template-columns: repeat(3, 1fr);
-      gap:14px;padding:0 0 10px;color:#111827;
-      font-weight:1000;letter-spacing:.2px;text-transform:uppercase;font-size:14px;
-    }
-    @media(max-width:980px){ .labelRow{grid-template-columns:1fr} }
-    .labelRow .lbl{border-left:4px solid var(--secColor);padding-left:10px;}
-    .labelRow .lbl span{color:#9ca3af;font-weight:900}
+      .news {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 12px;
+        padding: 12px;
+      }
+      .news .thumb {
+        height: 96px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #0b1220;
+      }
+      .news .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .news h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        line-height: 1.25;
+      }
+      .news .meta {
+        margin-top: 8px;
+      }
 
-    .newsGrid{display:grid;grid-template-columns: repeat(3, 1fr);gap:14px;align-items:stretch;}
-    @media(max-width:980px){ .newsGrid{grid-template-columns:1fr} }
-    .newsCard{
-      background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;overflow:hidden;
-      box-shadow:0 10px 20px rgba(0,0,0,.08);
-      display:flex;flex-direction:column;min-height:390px;
-    }
-    .newsThumb{width:100%;aspect-ratio: 16/9;background:#e5e7eb;overflow:hidden;}
-    .newsThumb img{width:100%;height:100%;object-fit:cover}
-    .newsBody{padding:14px 14px 16px;border-left:4px solid var(--secColor);display:flex;flex-direction:column;gap:10px;height:100%;}
-    .newsTitle{margin:0;font-size:15px;font-weight:1000;text-transform:uppercase;line-height:1.2;}
-    .newsSub{margin:0;font-size:14px;color:#6b7280;font-weight:800;line-height:1.35;}
+      /* SIDEBAR */
+      .sidebar .box {
+        padding: 12px;
+      }
+      .sidebar h3 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .li {
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .li b {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
+      .li span {
+        color: var(--muted);
+        font-size: 12px;
+      }
 
-    /* DOTS */
-    .dotsRow{display:flex;justify-content:center;gap:10px;padding:12px 0 2px;user-select:none;}
-    .dot{width:10px;height:10px;border-radius:999px;background:#d1d5db;cursor:pointer;border:none;}
-    .dot.active{background:#9ca3af}
-    .dotsRow[hidden]{display:none !important;}
+      /* VÍDEOS */
+      .videos {
+        margin-top: 16px;
+      }
+      .video-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 12px;
+        padding: 12px;
+      }
+      @media (max-width: 920px) {
+        .video-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .video-main {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #000;
+        aspect-ratio: 16/9;
+      }
+      .video-main iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      .video-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .vitem {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        transition: transform 0.12s ease, background 0.12s ease;
+      }
+      .vitem:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .vthumb {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #0b1220;
+        height: 78px;
+      }
+      .vthumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .vitem b {
+        font-size: 13px;
+        line-height: 1.2;
+      }
+      .vitem span {
+        font-size: 12px;
+        color: var(--muted);
+      }
 
-    /* SIDEBAR */
-    .sideSticky{position:sticky;top:140px}
-    @media(max-width:980px){ .sideSticky{position:static} }
-    .sideTitle{padding:14px 14px 10px;font-weight:1000;font-size:18px;background:#fff;border-bottom:1px solid var(--line);}
-    .sidePad{padding:14px;}
-    .sideBanner{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;}
-    .sideBanner img{width:100%;height:auto;}
+      /* FOOTER */
+      footer {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+        padding: 18px 0 26px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 720px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
 
-    .newsletter{background:#eee;border-radius:14px;padding:20px;display:grid;gap:14px;color:#111827;}
-    .newsletter h3{margin:0;font-size:26px;font-weight:400;letter-spacing:.2px;}
-    .newsletter p{margin:0;color:#6b7280;font-weight:800;line-height:1.35}
-    .newsletter input{width:100%;padding:14px 14px;border-radius:10px;border:1px solid #d1d5db;outline:none;font-weight:800;font-size:16px;background:#fff;}
-    .newsletter button{width:100%;padding:14px 14px;border-radius:0;border:none;background:#5aaea6;color:#fff;font-weight:1000;font-size:16px;text-transform:uppercase;cursor:pointer;}
-
-    /* Sidebar - últimas por editoria */
-    .sideLatest{padding:14px;}
-    .sideLatest .mini{margin:0 0 12px;color:var(--muted);font-weight:800;font-size:12px;line-height:1.35}
-    .sideLatest .group{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;}
-    .sideLatest .group:first-of-type{border-top:none;padding-top:0;margin-top:0;}
-    .sideLatest .k{font-weight:1000;text-transform:uppercase;font-size:12px;letter-spacing:.2px;margin-bottom:8px;}
-    .sideLatest ul{margin:0;padding-left:18px;color:#111827;font-weight:800;line-height:1.45}
-    .sideLatest li{margin:6px 0}
-    .sideLatest a:hover{text-decoration:underline;}
-
-    /* VIDEOS (fim) */
-    .videosSection{margin-top:18px;background:var(--teal);padding:26px 0 30px;}
-    .videosGrid{max-width:var(--container);margin:0 auto;padding:0 14px;display:grid;grid-template-columns: 1fr 2.2fr 1fr;gap:26px;align-items:start;}
-    @media(max-width:980px){ .videosGrid{grid-template-columns:1fr;gap:16px} }
-    .vCol{display:grid;gap:22px;}
-    .vCard{color:#fff;}
-    .vThumb{border-radius:14px;overflow:hidden;background:#0b1220;aspect-ratio: 16/9;position:relative;box-shadow:0 16px 26px rgba(0,0,0,.18);}
-    .vBig .vThumb{aspect-ratio: 21/9;}
-    @media(max-width:980px){ .vBig .vThumb{aspect-ratio:16/9} }
-    .vThumb img{width:100%;height:100%;object-fit:cover;opacity:.92}
-    .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:1000;color:rgba(255,255,255,.85);text-shadow:0 12px 24px rgba(0,0,0,.35);pointer-events:none;}
-    .vTitle{margin-top:12px;font-size:16px;font-weight:400;text-transform:uppercase;letter-spacing:.2px;}
-
-    /* FOOTER */
-    .footer{background:var(--top);color:#fff;padding:22px 0;}
-    .footGrid{display:grid;grid-template-columns: 1.2fr 1fr 1fr;gap:34px;align-items:start;}
-    @media(max-width:980px){ .footGrid{grid-template-columns:1fr;gap:18px} }
-    .footLogo{display:flex;align-items:center;gap:14px;font-weight:1000;font-size:28px;letter-spacing:.4px;}
-    .footLogo .vmark{width:56px;height:34px;border-radius:10px;background: linear-gradient(135deg,#1aa79b,#0b5a66);box-shadow:0 10px 20px rgba(0,0,0,.25);position:relative;}
-    .footLogo .vmark:after{content:"G";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:1000;color:#fff;}
-    .footCol h4{margin:6px 0 10px;font-size:26px;font-weight:400;}
-    .footLine{height:1px;background:rgba(255,255,255,.25);margin:8px 0 14px;}
-    .footList{margin:0;padding-left:18px;color:rgba(255,255,255,.8);font-weight:800;line-height:1.5}
-    .footList li{margin:6px 0}
-    .footNote{color:rgba(255,255,255,.7);font-weight:800;font-size:12px;line-height:1.4}
-  </style>
-</head>
-
-<body>
-  <header class="topbar">
-    <div class="container">
-      <div class="toprow">
-        <div class="brand">
-          <div class="logo" aria-hidden="true"></div>
-          <div>GIRO MT</div>
-        </div>
-
-        <div class="search" aria-label="Busca">
-          <input placeholder="O que está procurando?" />
-          <div class="lens">🔍</div>
-        </div>
-
-        <div class="market" aria-label="Cotação e data">
-          <span>Dólar <b>5,17</b></span>
-          <span>Euro <b>6,09</b></span>
-          <span>Ouro <b>863,00</b></span>
-          <span>Quarta, 25 de Fevereiro de 2026</span>
+  <body>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="container">
+        <div class="topbar-row">
+          <div class="topbar-left">
+            <span class="pill"
+              ><span class="dot"></span> AO VIVO • Portal em protótipo</span
+            >
+            <span class="pill" id="todayPill"
+              >Domingo, 01 de Março de 2026</span
+            >
+          </div>
+          <div class="rates">
+            <span class="rate">Dólar <b>5,13</b></span>
+            <span class="rate">Euro <b>6,06</b></span>
+            <span class="rate">Ouro <b>871,17</b></span>
+          </div>
         </div>
       </div>
     </div>
-  </header>
 
-  <div class="navwrap">
-    <div class="container">
-      <ul class="nav">
-        <li><a href="#politica">Política</a></li>
-        <li><a href="#esportes">Esportes</a></li>
-        <li><a href="#saude">Saúde</a></li>
-        <li><a href="#economia">Economia</a></li>
-        <li><a href="#videos">Vídeos</a></li>
-      </ul>
-    </div>
-  </div>
+    <!-- HEADER -->
+    <header>
+      <div class="container">
+        <div class="head">
+          <a class="brand" href="#">
+            <span class="logo" aria-hidden="true"></span>
+            <div>
+              <h1>GIRO MT</h1>
+              <small>Portal de notícias • protótipo editorial</small>
+            </div>
+          </a>
 
-  <main>
-    <div class="container">
-      <section class="bannerTop" aria-label="Banner topo">
-        <img alt="Banner topo" src="https://verdademt.com.br/storage/banners/198/698f9ce1e351f.png">
+          <div class="search">
+            <input
+              type="search"
+              placeholder="Buscar no GIRO MT (protótipo)..."
+            />
+          </div>
+
+          <div class="head-actions">
+            <button class="btn">Assine</button>
+            <button class="btn primary">Publicidade</button>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Categorias">
+          <ul>
+            <li>
+              <a href="#politica"><span class="tag">POLÍTICA</span> Política</a>
+            </li>
+            <li><a href="#esportes">Esportes</a></li>
+            <li><a href="#saude">Saúde</a></li>
+            <li><a href="#economia">Economia</a></li>
+            <li><a href="#educacao">Educação</a></li>
+            <li><a href="#seguranca">Segurança</a></li>
+            <li>
+              <a href="#videos"><span class="tag">VÍDEOS</span> Vídeos</a>
+            </li>
+            <li><a href="#ultimas">Últimas</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- BANNER TOPO (corrigido: contain + altura controlada) -->
+      <a
+        class="ad-slot"
+        href="https://verdademt.com.br/"
+        target="_blank"
+        rel="noopener"
+      >
+        <div class="ad-media">
+          <img
+            src="https://verdademt.com.br/storage/banners/198/698f9ce1e351f.png"
+            alt="Banner topo (exemplo) — publicidade"
+            loading="lazy"
+          />
+        </div>
+      </a>
+
+      <!-- ÚLTIMA HORA (ticker estilo Verdade/Vejanoticias) -->
+      <section class="breaking" aria-label="Última hora">
+        <div class="label">
+          <span><span class="dot"></span> ÚLTIMA HORA</span>
+        </div>
+        <div class="ticker" aria-live="polite">
+          <div class="ticker-track" id="tickerTrack">
+            <a
+              href="https://verdademt.com.br/noticia/max-russi-sinaliza-elson-ramos-para-chapa-majoritaria-10499"
+              target="_blank"
+              rel="noopener"
+            >
+              <b>Política:</b> Max Russi sinaliza Elson Ramos para chapa
+              majoritária
+            </a>
+            <a
+              href="https://verdademt.com.br/noticia/renda-domiciliar-por-morador-fica-acima-da-media-nacional-em-mato-grosso-segundo-ibge-10496"
+              target="_blank"
+              rel="noopener"
+            >
+              <b>Economia:</b> Renda per capita em MT acima da média nacional
+              (IBGE)
+            </a>
+            <a
+              href="https://verdademt.com.br/noticia/mt-hemocentro-alerta-para-estoque-baixo-de-sangue-10463"
+              target="_blank"
+              rel="noopener"
+            >
+              <b>Saúde:</b> MT Hemocentro alerta para estoque baixo de sangue
+            </a>
+            <a
+              href="https://verdademt.com.br/noticia/com-entradas-a-partir-de-10-reais-ingressos-para-cuiaba-x-uniao-ja-estao-a-venda-pelo-facepass-10281"
+              target="_blank"
+              rel="noopener"
+            >
+              <b>Esportes:</b> Ingressos para Cuiabá x União à venda (Facepass)
+            </a>
+
+            <!-- duplica para loop suave -->
+            <a
+              href="https://verdademt.com.br/noticia/max-russi-sinaliza-elson-ramos-para-chapa-majoritaria-10499"
+              target="_blank"
+              rel="noopener"
+            >
+              <b>Política:</b> Max Russi sinaliza Elson Ramos para chapa
+              majoritária
+            </a>
+            <a
+              href="https://verdademt.com.br/noticia/renda-domiciliar-por-morador-fica-acima-da-media-nacional-em-mato-grosso-segundo-ibge-10496"
+              target="_blank"
+              rel="noopener"
+            >
+              <b>Economia:</b> Renda per capita em MT acima da média nacional
+              (IBGE)
+            </a>
+          </div>
+        </div>
       </section>
 
-      <!-- BREAKING / ULTIMA HORA -->
-      <div class="breaking" aria-label="Notícias de última hora" id="breaking">
-        <div class="left">NOTÍCIAS DE ÚLTIMA HORA</div>
+      <div class="grid">
+        <!-- COLUNA PRINCIPAL -->
+        <section>
+          <!-- CAPA -->
+          <div class="hero">
+            <article class="card hero-main">
+              <a
+                href="https://verdademt.com.br/noticia/max-russi-sinaliza-elson-ramos-para-chapa-majoritaria-10499"
+                target="_blank"
+                rel="noopener"
+              >
+                <div class="media">
+                  <img
+                    src="https://verdademt.com.br/storage/news/10499/69a426f688b4c.jpg"
+                    alt="Imagem da matéria"
+                    loading="lazy"
+                  />
+                  <div class="badge">Destaque • Política</div>
+                </div>
+                <div class="content">
+                  <div class="kicker">POLÍTICA</div>
+                  <h2 class="title">
+                    Max Russi sinaliza Elson Ramos para chapa majoritária
+                  </h2>
+                  <p class="excerpt">
+                    Presidente da Assembleia defende protagonismo da sigla nas
+                    eleições e admite empresário como possível vice ou suplente
+                    ao Senado.
+                  </p>
+                  <div class="meta">
+                    <span class="src">Fonte: Verdade MT</span>
+                    <span>Publicado: 01/03/2026</span>
+                  </div>
+                </div>
+              </a>
+            </article>
 
-        <div class="mid">
-          <div class="pill">
-            <div class="arrow" title="Anterior" id="breakingPrev">‹</div>
-            <div id="breakingCat">CARREGANDO…</div>
-            <div class="arrow" title="Próximo" id="breakingNext">›</div>
+            <div class="hero-side">
+              <article class="card mini">
+                <a
+                  href="https://verdademt.com.br/noticia/renda-domiciliar-por-morador-fica-acima-da-media-nacional-em-mato-grosso-segundo-ibge-10496"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10496/69a4255d6cb46.jpg"
+                      alt="Imagem da matéria"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <h3>
+                      Renda domiciliar por morador fica acima da média nacional
+                      em MT
+                    </h3>
+                    <p>
+                      Pesquisa do IBGE consolida tendência de expansão dos
+                      rendimentos.
+                    </p>
+                  </div>
+                </a>
+              </article>
+
+              <article class="card mini">
+                <a
+                  href="https://verdademt.com.br/noticia/mt-hemocentro-alerta-para-estoque-baixo-de-sangue-10463"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10463/699da994cc231.jpg"
+                      alt="Imagem da matéria"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <h3>MT Hemocentro alerta para estoque baixo de sangue</h3>
+                    <p>
+                      Unidade reforça a importância da doação para recompor
+                      estoques.
+                    </p>
+                  </div>
+                </a>
+              </article>
+
+              <article class="card mini">
+                <a
+                  href="https://verdademt.com.br/noticia/com-entradas-a-partir-de-10-reais-ingressos-para-cuiaba-x-uniao-ja-estao-a-venda-pelo-facepass-10281"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10281/69776df92be0e.jpg"
+                      alt="Imagem da matéria"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <h3>
+                      Ingressos: Cuiabá x União a partir de R$ 10 (Facepass)
+                    </h3>
+                    <p>
+                      Venda exclusiva no app/site e acesso com reconhecimento
+                      facial.
+                    </p>
+                  </div>
+                </a>
+              </article>
+            </div>
           </div>
-        </div>
 
-        <a class="ticker" id="breakingLink" href="#" target="_self">
-          <span id="breakingTitle">Carregando títulos…</span>
-        </a>
-      </div>
+          <!-- BANNER DO MEIO (corrigido: contain + altura controlada) -->
+          <a
+            class="ad-slot"
+            href="https://vejanoticiasdemt.com.br/"
+            target="_blank"
+            rel="noopener"
+            aria-label="Banner do meio"
+          >
+            <div class="ad-media">
+              <img
+                src="https://vejanoticiasdemt.com.br/storage/banners/162/698f8d695c382.png"
+                alt="Banner do meio (exemplo) — publicidade"
+                loading="lazy"
+              />
+            </div>
+          </a>
 
-      <div style="height:14px"></div>
-
-      <section class="grid">
-        <div>
-          <section class="capWrap" aria-label="Capa">
-            <div class="capGrid">
-              <a class="capItem big" href="#">
-                <img alt="Destaque" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg">
-                <div class="capOverlay">
-                  <div class="meta">| EDUCAÇÃO | EDUCA</div>
-                  <h2>Requerida por Max, câmara temática vai reconhecer atuação de professores da educação infantil</h2>
-                  <p>Subtítulo/linha fina (modelo) para a capa.</p>
-                </div>
-              </a>
-
-              <a class="capItem med" href="#">
-                <img alt="Médio" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg">
-                <div class="capOverlay">
-                  <div class="meta">| POLÍTICA | Fluxo de R$ 29 milhões</div>
-                  <h3>Prefeitura de Cuiabá paga aposentados e pensionistas nesta quarta</h3>
-                  <p>Subtítulo/linha fina (modelo).</p>
-                </div>
-              </a>
-
-              <div class="capStack">
-                <a class="capItem small" href="#">
-                  <img alt="Pequeno 1" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg">
-                  <div class="capOverlay">
-                    <div class="meta">| ECONOMIA | Confiante</div>
-                    <h3>Intenção de Consumo das Famílias começa 2026 em alta em Cuiabá</h3>
-                    <p>Subtítulo/linha fina (modelo).</p>
+          <!-- SEÇÃO POLÍTICA -->
+          <section class="section" id="politica">
+            <div class="section-head">
+              <h2>Política</h2>
+              <a href="https://verdademt.com.br/" target="_blank" rel="noopener"
+                >Ver mais</a
+              >
+            </div>
+            <div class="cards">
+              <article class="card news">
+                <a
+                  href="https://verdademt.com.br/noticia/max-russi-sinaliza-elson-ramos-para-chapa-majoritaria-10499"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10499/69a426f688b4c.jpg"
+                      alt="Imagem"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">POLÍTICA • Verdade MT</div>
+                    <h3>
+                      Max Russi sinaliza Elson Ramos para chapa majoritária
+                    </h3>
+                    <p class="excerpt">
+                      Movimentação indica articulações para 2026 e
+                      fortalecimento partidário.
+                    </p>
+                    <div class="meta"><span class="src">01/03/2026</span></div>
                   </div>
                 </a>
+              </article>
 
-                <a class="capItem small" href="#">
-                  <img alt="Pequeno 2" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg">
-                  <div class="capOverlay">
-                    <div class="meta">| POLÍTICA | 24 anos</div>
-                    <h3>TCE-MT homenageia Valter Albano e destaca continuidade de projetos estratégicos</h3>
-                    <p>Subtítulo/linha fina (modelo).</p>
+              <article class="card news">
+                <a
+                  href="https://vejanoticiasdemt.com.br/noticia/max-russi-sinaliza-elson-ramos-para-chapa-majoritaria-e-amplia-articulacao-visando-fortalecimento-partidario-7352"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://vejanoticiasdemt.com.br/storage/news/7352/69a42958ec989.jpg"
+                      alt="Imagem"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">POLÍTICA • Veja Notícias MT</div>
+                    <h3>
+                      Max Russi amplia articulação visando fortalecimento
+                      partidário
+                    </h3>
+                    <p class="excerpt">
+                      Texto equivalente em outro portal (mesmas fontes/linha
+                      editorial).
+                    </p>
+                    <div class="meta"><span class="src">01/03/2026</span></div>
                   </div>
                 </a>
+              </article>
+            </div>
+          </section>
+
+          <!-- SEÇÃO ESPORTES -->
+          <section class="section" id="esportes">
+            <div class="section-head">
+              <h2>Esportes</h2>
+              <a href="https://verdademt.com.br/" target="_blank" rel="noopener"
+                >Ver mais</a
+              >
+            </div>
+            <div class="cards">
+              <article class="card news">
+                <a
+                  href="https://verdademt.com.br/noticia/com-entradas-a-partir-de-10-reais-ingressos-para-cuiaba-x-uniao-ja-estao-a-venda-pelo-facepass-10281"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10281/69776df92be0e.jpg"
+                      alt="Imagem"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">ESPORTES • Verdade MT</div>
+                    <h3>Ingressos para Cuiabá x União à venda pelo Facepass</h3>
+                    <p class="excerpt">
+                      Acesso à Arena Pantanal ocorre por reconhecimento facial.
+                    </p>
+                    <div class="meta"><span class="src">26/01/2026</span></div>
+                  </div>
+                </a>
+              </article>
+
+              <article class="card news">
+                <a
+                  href="https://verdademt.com.br/noticia/renda-domiciliar-por-morador-fica-acima-da-media-nacional-em-mato-grosso-segundo-ibge-10496"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10496/69a4255d6cb46.jpg"
+                      alt="Imagem"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">EDITORIAL • Exemplo</div>
+                    <h3>Card de exemplo extra (para manter “grade cheia”)</h3>
+                    <p class="excerpt">
+                      Depois ajustamos quantidade por seção no padrão editorial
+                      final.
+                    </p>
+                    <div class="meta"><span class="src">Protótipo</span></div>
+                  </div>
+                </a>
+              </article>
+            </div>
+          </section>
+
+          <!-- SEÇÃO SAÚDE -->
+          <section class="section" id="saude">
+            <div class="section-head">
+              <h2>Saúde</h2>
+              <a href="https://verdademt.com.br/" target="_blank" rel="noopener"
+                >Ver mais</a
+              >
+            </div>
+            <div class="cards">
+              <article class="card news">
+                <a
+                  href="https://verdademt.com.br/noticia/mt-hemocentro-alerta-para-estoque-baixo-de-sangue-10463"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10463/699da994cc231.jpg"
+                      alt="Imagem"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">SAÚDE • Verdade MT</div>
+                    <h3>MT Hemocentro alerta para estoque baixo de sangue</h3>
+                    <p class="excerpt">
+                      Chamado para doadores reforça abastecimento e atendimento
+                      à população.
+                    </p>
+                    <div class="meta"><span class="src">01/03/2026</span></div>
+                  </div>
+                </a>
+              </article>
+
+              <article class="card news">
+                <a
+                  href="https://www.cuiaba.mt.gov.br/noticias"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10496/69a4255d6cb46.jpg"
+                      alt="Imagem (placeholder editorial)"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">
+                      FONTE OFICIAL • Prefeitura de Cuiabá
+                    </div>
+                    <h3>
+                      Notícias oficiais da Prefeitura (para preencher matérias
+                      do GIRO)
+                    </h3>
+                    <p class="excerpt">
+                      Link direto para listagem — depois conectamos cada item
+                      com imagem/categoria.
+                    </p>
+                    <div class="meta">
+                      <span class="src">cuiaba.mt.gov.br</span>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            </div>
+          </section>
+
+          <!-- SEÇÃO ECONOMIA -->
+          <section class="section" id="economia">
+            <div class="section-head">
+              <h2>Economia</h2>
+              <a href="https://verdademt.com.br/" target="_blank" rel="noopener"
+                >Ver mais</a
+              >
+            </div>
+            <div class="cards">
+              <article class="card news">
+                <a
+                  href="https://verdademt.com.br/noticia/renda-domiciliar-por-morador-fica-acima-da-media-nacional-em-mato-grosso-segundo-ibge-10496"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10496/69a4255d6cb46.jpg"
+                      alt="Imagem"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">ECONOMIA • Verdade MT</div>
+                    <h3>
+                      Renda domiciliar por morador em MT fica acima da média
+                      nacional
+                    </h3>
+                    <p class="excerpt">
+                      Indicador reforça o momento positivo e crescimento em
+                      setores produtivos.
+                    </p>
+                    <div class="meta"><span class="src">01/03/2026</span></div>
+                  </div>
+                </a>
+              </article>
+
+              <article class="card news">
+                <a
+                  href="https://www.secom.mt.gov.br/"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div class="thumb">
+                    <img
+                      src="https://verdademt.com.br/storage/news/10499/69a426f688b4c.jpg"
+                      alt="Imagem (placeholder editorial)"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <div class="kicker">FONTE OFICIAL • SECOM MT</div>
+                    <h3>
+                      SECOM MT: listagem e conteúdos oficiais (notícias, TV,
+                      rádio)
+                    </h3>
+                    <p class="excerpt">
+                      Boa base para preencher matérias do GIRO com origem e
+                      crédito.
+                    </p>
+                    <div class="meta">
+                      <span class="src">secom.mt.gov.br</span>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            </div>
+          </section>
+
+          <!-- VÍDEOS (padrão “Vídeo do Dia” + lista) -->
+          <section class="section videos" id="videos">
+            <div class="section-head">
+              <h2>Vídeos</h2>
+              <a
+                href="https://www.youtube.com/@secom_mt/videos"
+                target="_blank"
+                rel="noopener"
+                >Ver mais</a
+              >
+            </div>
+
+            <div class="card">
+              <div class="video-grid">
+                <div>
+                  <div class="kicker">VÍDEO DO DIA • GovMT (@secom_mt)</div>
+                  <div class="video-main">
+                    <iframe
+                      id="videoPlayer"
+                      src="https://www.youtube.com/embed/_3FI5KTtcNY"
+                      title="Vídeo do dia"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowfullscreen
+                    >
+                    </iframe>
+                  </div>
+                  <div class="meta">
+                    <span class="src" id="videoTitle"
+                      >Novo sistema do Detran-MT permite transferência de
+                      veículo (exemplo)</span
+                    >
+                  </div>
+                </div>
+
+                <div class="video-list" id="videoList">
+                  <!-- preenchido via JS -->
+                </div>
               </div>
             </div>
           </section>
-
-          <!-- POLÍTICA -->
-          <section class="section" id="politica" style="--secColor:var(--c-pol)">
-            <div class="secHeader">
-              <div class="name">Política</div>
-              <div class="line"></div>
-              <button class="more">VER MAIS</button>
-            </div>
-            <div class="labelRow">
-              <div class="lbl">| POLÍTICA | <span>DESENVOLVIMENTO NA REGIÃO</span></div>
-              <div class="lbl">| POLÍTICA | <span>MAIS CRESCIMENTO</span></div>
-              <div class="lbl">| POLÍTICA | <span>INFRAESTRUTURA</span></div>
-            </div>
-
-            <div class="newsGrid" data-carousel-grid>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Pol 1" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">“Parceria do Governo de MT representa um novo momento para…”</h4>
-                  <p class="newsSub">Município recebeu entregas de ações e anúncio de mais de R$ 55,3 milhões em novos inv...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Pol 2" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">“Governo alavancou economia de MT e levou os municípios a…”</h4>
-                  <p class="newsSub">Em última agenda pela Região Oeste, o governador Mauro Mendes anunciou uma série de i...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Pol 3" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">“Ações do Governo de MT fortalecem a economia e atendem di…”</h4>
-                  <p class="newsSub">Nos últimos sete anos, o município já recebeu R$ 406,8 milhões em investimentos em to...</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="dotsRow" aria-label="Carrossel Política" data-carousel-dots></div>
-          </section>
-
-          <!-- ESPORTES -->
-          <section class="section" id="esportes" style="--secColor:var(--c-esp)">
-            <div class="secHeader">
-              <div class="name">Esportes</div>
-              <div class="line"></div>
-              <button class="more">VER MAIS</button>
-            </div>
-            <div class="labelRow">
-              <div class="lbl">| ESPORTES | <span>EM ABRIL</span></div>
-              <div class="lbl">| ESPORTES | <span>CONFIRA</span></div>
-              <div class="lbl">| ESPORTES | <span>MAIOR DE TODAS</span></div>
-            </div>
-
-            <div class="newsGrid" data-carousel-grid>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Esp 1" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Arena Pantanal vai sediar seis jogos da FIFA Series de fut...</h4>
-                  <p class="newsSub">Para o secretário de Estado de Cultura, Esporte e Lazer, Davi Moura, a escolha consol...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Esp 2" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Calendário 2026 dos jogos escolares e jogos estudantis mat...</h4>
-                  <p class="newsSub">Competições realizadas pela Secel terão 11 etapas regionais e quatro estaduais neste...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Esp 3" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Maior copa do Brasil da história inicia com recorde de clu...</h4>
-                  <p class="newsSub">No jogo de abertura, Desportiva vence Sampaio Corrêa-RJ nos pênaltis</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="dotsRow" aria-label="Carrossel Esportes" data-carousel-dots></div>
-          </section>
-
-          <!-- SAÚDE -->
-          <section class="section" id="saude" style="--secColor:var(--c-sau)">
-            <div class="secHeader">
-              <div class="name">Saúde</div>
-              <div class="line"></div>
-              <button class="more">VER MAIS</button>
-            </div>
-            <div class="labelRow">
-              <div class="lbl">| SAÚDE | <span>TIPOS A-, B+, O- E O+</span></div>
-              <div class="lbl">| SAÚDE | <span>280 SERVIDORES MOBILIZADOS</span></div>
-              <div class="lbl">| SAÚDE | <span>SAÚDE PÚBLICA</span></div>
-            </div>
-
-            <div class="newsGrid" data-carousel-grid>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Sau 1" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">MT Hemocentro alerta para estoque baixo de sangue</h4>
-                  <p class="newsSub">Voluntários podem realizar a coleta na unidade de segunda a sexta...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Sau 2" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Prefeitura faz grande mutirão contra a dengue em Cuiabá ne...</h4>
-                  <p class="newsSub">A Prefeitura reforça que a colaboração da população é fundamental...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Sau 3" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Emenda de Max Russi viabiliza atendimento oftalmológico e...</h4>
-                  <p class="newsSub">A ação garante mais acesso, qualidade e eficiência nos serviços...</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="dotsRow" aria-label="Carrossel Saúde" data-carousel-dots></div>
-          </section>
-
-          <!-- ECONOMIA -->
-          <section class="section" id="economia" style="--secColor:var(--c-eco)">
-            <div class="secHeader">
-              <div class="name">Economia</div>
-              <div class="line"></div>
-              <button class="more">VER MAIS</button>
-            </div>
-            <div class="labelRow">
-              <div class="lbl">| ECONOMIA | <span>QUALITATIVA</span></div>
-              <div class="lbl">| ECONOMIA | <span>MEGA SENA</span></div>
-              <div class="lbl">| ECONOMIA | <span>SAIBA MAIS</span></div>
-            </div>
-
-            <div class="newsGrid" data-carousel-grid>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Eco 1" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Várzea Grande apoia pesquisa do Ministério do Turismo sobr...</h4>
-                  <p class="newsSub">Viajar com dignidade, segurança e autonomia deve ser um direito...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Eco 2" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Mega-Sena sorteia nesta terça-feira prêmio acumulado em R$...</h4>
-                  <p class="newsSub">Apostas podem ser feitas até às 20h, horário de Brasília...</p>
-                </div>
-              </a>
-              <a class="newsCard" href="#">
-                <div class="newsThumb"><img alt="Eco 3" src="https://verdademt.com.br/storage/news/10471/699f07a9062f2.jpg"></div>
-                <div class="newsBody">
-                  <h4 class="newsTitle">Desenvolve MT orienta empreendedores sobre as etapas para...</h4>
-                  <p class="newsSub">Após cadastramento online, todas as fases serão acompanhadas...</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="dotsRow" aria-label="Carrossel Economia" data-carousel-dots></div>
-          </section>
-        </div>
+        </section>
 
         <!-- SIDEBAR -->
-        <aside class="sideSticky">
-          <div class="card">
-            <div class="sideTitle">Publicidade</div>
-            <div class="sidePad">
-              <div class="sideBanner">
-                <img alt="Banner lateral" src="https://verdademt.com.br/storage/banners/197/698a796c549c9.gif">
-              </div>
+        <aside class="sidebar" id="ultimas">
+          <div class="card box">
+            <h3>Últimas Notícias</h3>
+            <div class="list">
+              <a
+                class="li"
+                href="https://verdademt.com.br/noticia/max-russi-sinaliza-elson-ramos-para-chapa-majoritaria-10499"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>Max Russi sinaliza Elson Ramos para chapa majoritária</b>
+                <span>Política • Verdade MT</span>
+              </a>
+              <a
+                class="li"
+                href="https://verdademt.com.br/noticia/renda-domiciliar-por-morador-fica-acima-da-media-nacional-em-mato-grosso-segundo-ibge-10496"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>Renda per capita em MT acima da média nacional</b>
+                <span>Economia • Verdade MT</span>
+              </a>
+              <a
+                class="li"
+                href="https://verdademt.com.br/noticia/mt-hemocentro-alerta-para-estoque-baixo-de-sangue-10463"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>MT Hemocentro alerta para estoque baixo de sangue</b>
+                <span>Saúde • Verdade MT</span>
+              </a>
+              <a
+                class="li"
+                href="https://verdademt.com.br/noticia/com-entradas-a-partir-de-10-reais-ingressos-para-cuiaba-x-uniao-ja-estao-a-venda-pelo-facepass-10281"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>Ingressos para Cuiabá x União já estão à venda</b>
+                <span>Esportes • Verdade MT</span>
+              </a>
             </div>
           </div>
 
-          <div style="height:14px"></div>
-
-          <div class="card" style="border-radius:14px; overflow:hidden;">
-            <div class="newsletter">
-              <h3>NEWSLETTER</h3>
-              <p>Cadastre o seu email para receber as notícias.</p>
-              <input placeholder="Digite seu email..." />
-              <button>CADASTRE-SE</button>
-            </div>
-          </div>
-
-          <div style="height:14px"></div>
-
-          <div class="card">
-            <div class="sideTitle">Últimas por Editoria</div>
-            <div class="sideLatest">
-              <div class="mini">Preenchido automaticamente a partir dos títulos já exibidos na home.</div>
-
-              <div class="group">
-                <div class="k">Política</div>
-                <ul id="latest-politica"></ul>
-              </div>
-
-              <div class="group">
-                <div class="k">Esportes</div>
-                <ul id="latest-esportes"></ul>
-              </div>
-
-              <div class="group">
-                <div class="k">Saúde</div>
-                <ul id="latest-saude"></ul>
-              </div>
-
-              <div class="group">
-                <div class="k">Economia</div>
-                <ul id="latest-economia"></ul>
-              </div>
+          <div class="card box" style="margin-top: 12px">
+            <h3>Fontes para preenchimento (oficiais)</h3>
+            <div class="list">
+              <a
+                class="li"
+                href="https://www.secom.mt.gov.br/"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>SECOM MT</b>
+                <span>Notícias / TV / Rádio / Campanhas</span>
+              </a>
+              <a
+                class="li"
+                href="https://www.cuiaba.mt.gov.br/noticias"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>Prefeitura de Cuiabá</b>
+                <span>Notícias e comunicados</span>
+              </a>
+              <a
+                class="li"
+                href="https://www.youtube.com/@secom_mt/videos"
+                target="_blank"
+                rel="noopener"
+              >
+                <b>YouTube GovMT (@secom_mt)</b>
+                <span>Vídeos para o bloco “Vídeo do Dia”</span>
+              </a>
             </div>
           </div>
         </aside>
-      </section>
-    </div>
-  </main>
-
-  <!-- VIDEOS NO FIM (2-1-2) -->
-  <section class="videosSection" id="videos" aria-label="Vídeos">
-    <div class="videosGrid">
-      <div class="vCol">
-        <a class="vCard" href="#">
-          <div class="vThumb">
-            <img alt="Vídeo 1" src="https://verdademt.com.br/storage/banners/198/698f9ce1e351f.png">
-            <div class="play">▶</div>
-          </div>
-          <div class="vTitle">ALMT BALANÇO 2025</div>
-        </a>
-        <a class="vCard" href="#">
-          <div class="vThumb">
-            <img alt="Vídeo 2" src="https://verdademt.com.br/storage/banners/197/698a796c549c9.gif">
-            <div class="play">▶</div>
-          </div>
-          <div class="vTitle">A SERVIÇO DO CIDADÃO - ALMT</div>
-        </a>
       </div>
+    </main>
 
-      <a class="vCard vBig" href="#">
-        <div class="vThumb">
-          <img alt="Vídeo central" src="https://verdademt.com.br/storage/banners/198/698f9ce1e351f.png">
-          <div class="play">▶</div>
-        </div>
-        <div class="vTitle">ALMT PRESENTES</div>
-      </a>
-
-      <div class="vCol">
-        <a class="vCard" href="#">
-          <div class="vThumb">
-            <img alt="Vídeo 4" src="https://verdademt.com.br/storage/banners/198/698f9ce1e351f.png">
-            <div class="play">▶</div>
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <b style="color: var(--text)">GIRO MT</b>
+            <p style="margin: 8px 0 0; line-height: 1.5">
+              Protótipo editorial para apresentação: capa, cards, banners e
+              vídeos no padrão de portal. Estrutura em HTML+CSS e JS embutido.
+            </p>
           </div>
-          <div class="vTitle">ALMT EMENDAS</div>
-        </a>
-        <a class="vCard" href="#">
-          <div class="vThumb">
-            <img alt="Vídeo 5" src="https://verdademt.com.br/storage/banners/197/698a796c549c9.gif">
-            <div class="play">▶</div>
+          <div>
+            <b style="color: var(--text)">Crédito e fidelidade</b>
+            <p style="margin: 8px 0 0; line-height: 1.5">
+              Links e imagens usados aqui apontam para páginas públicas (ex.:
+              Verdade MT / Veja Notícias MT) e fontes oficiais (SECOM MT /
+              Prefeitura de Cuiabá). Em produção, o GIRO MT exibirá crédito e
+              origem por matéria.
+            </p>
           </div>
-          <div class="vTitle">ALMT 190 ANOS</div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footGrid">
-        <div class="footCol">
-          <div class="footLogo">
-            <div class="vmark" aria-hidden="true"></div>
-            <div>GIRO<span style="opacity:.85">MT</span></div>
-          </div>
-          <div class="footNote" style="margin-top:10px;">
-            Esqueleto 1:1 baseado no vídeo enviado.
-          </div>
-        </div>
-
-        <div class="footCol">
-          <h4>Últimas Notícias</h4>
-          <div class="footLine"></div>
-          <ul class="footList">
-            <li>Requerida por Max, câmara temática vai…</li>
-            <li>Prefeitura de Cuiabá paga aposentados…</li>
-            <li>Intenção de Consumo das Famílias começa…</li>
-          </ul>
-        </div>
-
-        <div class="footCol">
-          <h4>Video do Dia</h4>
-          <div class="footLine"></div>
-          <div class="footNote">Área reservada (modelo) — pode apontar para o vídeo central.</div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <script>
-    (function(){
-      function $(sel, root){ return (root || document).querySelector(sel); }
-      function $all(sel, root){ return Array.from((root || document).querySelectorAll(sel)); }
+    <script>
+      // === Data / Topbar (simples) ===
+      (function () {
+        const el = document.getElementById("todayPill");
+        try {
+          const now = new Date();
+          const fmt = new Intl.DateTimeFormat("pt-BR", {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          });
+          const s = fmt.format(now);
+          el.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+        } catch (e) {}
+      })();
 
-      function normalizeText(s){
-        return (s || "").replace(/\s+/g," ").trim();
-      }
-
-      function isGoodTitle(text){
-        const t = normalizeText(text);
-        if(!t) return false;
-        if(t.length < 12) return false;
-        if(/^ver mais$/i.test(t)) return false;
-        if(/^carregando/i.test(t)) return false;
-        return true;
-      }
-
-      function collectRecentPerCategory(){
-        const sections = [
-          { id: "politica", name: "POLÍTICA" },
-          { id: "esportes", name: "ESPORTES" },
-          { id: "saude", name: "SAÚDE" },
-          { id: "economia", name: "ECONOMIA" }
-        ];
-
-        const items = [];
-        const latestMap = { politica: [], esportes: [], saude: [], economia: [] };
-
-        for(const s of sections){
-          const sec = document.getElementById(s.id);
-          if(!sec) continue;
-
-          let links = $all("a.newsCard", sec);
-          if(!links.length) links = $all("a", sec);
-
-          const picked = [];
-          for(const a of links){
-            if(picked.length >= 8) break;
-
-            const titleEl = $(".newsTitle", a) || $("h4", a) || $("h3", a);
-            const title = normalizeText(titleEl ? titleEl.textContent : a.textContent);
-            if(!isGoodTitle(title)) continue;
-
-            const href = a.getAttribute("href") || "#";
-            const obj = { catId: s.id, catName: s.name, title, href };
-
-            picked.push(obj);
-            items.push(obj);
-          }
-
-          latestMap[s.id] = picked.slice(0, 5);
+      // === Ticker (Última Hora) ===
+      (function () {
+        const track = document.getElementById("tickerTrack");
+        let x = 0;
+        const speed = 0.6; // px/frame
+        function step() {
+          x -= speed;
+          if (Math.abs(x) > track.scrollWidth / 2) x = 0;
+          track.style.transform = `translateX(${x}px)`;
+          requestAnimationFrame(step);
         }
+        requestAnimationFrame(step);
+      })();
 
-        return { items, latestMap };
+      // === Vídeos (padrão: Vídeo do Dia + lista) ===
+      const videos = [
+        {
+          id: "_3FI5KTtcNY",
+          title:
+            "Novo sistema do Detran-MT permite transferência de veículo (exemplo)",
+          subtitle: "GovMT • @secom_mt",
+        },
+        {
+          id: "aORsmalfXHY",
+          title: "Podcast MT Conectado — episódio (exemplo)",
+          subtitle: "GovMT • @secom_mt",
+        },
+        {
+          id: "fjLx5bh9RB0",
+          title: "Campanha: combate aos incêndios florestais (exemplo)",
+          subtitle: "GovMT • @secom_mt",
+        },
+        {
+          id: "17mtQZIxUug",
+          title: "Boletim (tarde): Notícias do GovMT (exemplo)",
+          subtitle: "GovMT • @secom_mt",
+        },
+        {
+          id: "hLf8LA_VDDM",
+          title: "Campanha Dia D — Educação (exemplo)",
+          subtitle: "GovMT • @secom_mt",
+        },
+      ];
+
+      const player = document.getElementById("videoPlayer");
+      const titleEl = document.getElementById("videoTitle");
+      const listEl = document.getElementById("videoList");
+
+      function ytThumb(id) {
+        return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
       }
 
-      function fillLatestList(ulId, arr){
-        const ul = document.getElementById(ulId);
-        if(!ul) return;
-        ul.innerHTML = "";
-
-        if(!arr || !arr.length){
-          ul.innerHTML = "<li>Sem itens no momento.</li>";
-          return;
-        }
-
-        for(const it of arr){
-          const li = document.createElement("li");
-          const a = document.createElement("a");
-          a.href = it.href || "#";
-          a.textContent = it.title;
-          li.appendChild(a);
-          ul.appendChild(li);
-        }
+      function setVideo(v) {
+        player.src = `https://www.youtube.com/embed/${v.id}`;
+        titleEl.textContent = v.title;
       }
 
-      function setupBreakingTicker(items){
-        const breakingTitle = document.getElementById("breakingTitle");
-        const breakingCat   = document.getElementById("breakingCat");
-        const breakingLink  = document.getElementById("breakingLink");
-        const btnPrev       = document.getElementById("breakingPrev");
-        const btnNext       = document.getElementById("breakingNext");
+      videos.slice(1).forEach((v) => {
+        const item = document.createElement("div");
+        item.className = "vitem";
+        item.innerHTML = `
+        <div class="vthumb"><img src="${ytThumb(
+          v.id
+        )}" alt="Thumbnail do vídeo" loading="lazy"></div>
+        <div>
+          <b>${v.title}</b><br>
+          <span>${v.subtitle}</span>
+        </div>
+      `;
+        item.addEventListener("click", () => setVideo(v));
+        listEl.appendChild(item);
+      });
 
-        if(!breakingTitle || !breakingCat || !breakingLink) return;
-
-        const cleaned = (items || []).filter(x => isGoodTitle(x.title));
-        if(!cleaned.length){
-          breakingCat.textContent = "GIRO MT";
-          breakingTitle.textContent = "Sem títulos para exibir.";
-          breakingLink.href = "#";
-          return;
-        }
-
-        let idx = 0;
-        function render(){
-          const it = cleaned[idx];
-          breakingCat.textContent = it.catName;
-          breakingTitle.textContent = it.title;
-          breakingLink.href = it.href || "#";
-        }
-        function prev(){ idx = (idx - 1 + cleaned.length) % cleaned.length; render(); }
-        function next(){ idx = (idx + 1) % cleaned.length; render(); }
-
-        if(btnPrev) btnPrev.addEventListener("click", prev);
-        if(btnNext) btnNext.addEventListener("click", next);
-
-        render();
-        setInterval(next, 6000);
-      }
-
-      function setupSectionCarousels(){
-        const sections = $all("section.section");
-        for(const sec of sections){
-          const grid = $("[data-carousel-grid]", sec);
-          const dotsWrap = $("[data-carousel-dots]", sec);
-          if(!grid || !dotsWrap) continue;
-
-          const cards = $all(".newsCard", grid);
-          const perPage = 3;
-          const totalPages = Math.ceil(cards.length / perPage);
-
-          if(totalPages <= 1){
-            dotsWrap.setAttribute("hidden", "true");
-            cards.forEach(c => c.style.display = "");
-            continue;
-          }
-
-          dotsWrap.removeAttribute("hidden");
-          dotsWrap.innerHTML = "";
-          const dots = [];
-
-          function showPage(p){
-            const page = Math.max(0, Math.min(totalPages - 1, p));
-            cards.forEach((c, i) => {
-              const inPage = i >= page * perPage && i < (page + 1) * perPage;
-              c.style.display = inPage ? "" : "none";
-            });
-            dots.forEach((d, i) => d.classList.toggle("active", i === page));
-            dotsWrap.dataset.page = String(page);
-          }
-
-          for(let i=0;i<totalPages;i++){
-            const b = document.createElement("button");
-            b.className = "dot" + (i===0 ? " active" : "");
-            b.setAttribute("aria-label", "Página " + (i+1));
-            b.addEventListener("click", () => showPage(i));
-            dotsWrap.appendChild(b);
-            dots.push(b);
-          }
-
-          showPage(0);
-        }
-      }
-
-      function init(){
-        const { items, latestMap } = collectRecentPerCategory();
-
-        fillLatestList("latest-politica", latestMap.politica);
-        fillLatestList("latest-esportes", latestMap.esportes);
-        fillLatestList("latest-saude", latestMap.saude);
-        fillLatestList("latest-economia", latestMap.economia);
-
-        setupBreakingTicker(items);
-        setupSectionCarousels();
-      }
-
-      if(document.readyState === "loading"){
-        document.addEventListener("DOMContentLoaded", init);
-      } else {
-        init();
-      }
-    })();
-  </script>
-</body>
+      setVideo(videos[0]);
+    </script>
+  </body>
 </html>
